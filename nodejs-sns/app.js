@@ -6,11 +6,12 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const {sequelize} = require('./models');
 
 dotenv.config();    // process.env
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
-const {sequelize} = require('./models');
+const postRouter = require('./routes/post');
 const passportConfig = require('./passport');
 
 const app = express();
@@ -31,6 +32,7 @@ sequelize.sync()    // 개발시에 테이블 전체 재생성하는 옵션 -> {
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json()); // req.body ajax json 요청으로부터
 app.use(express.urlencoded({extended: false}));     // req.body form으로 부터
 app.use(cookieParser(process.env.COOKIE_SECRET));   // {connect.sid : user.id}
@@ -48,6 +50,7 @@ app.use(passport.session());    // connect.sid라는 이름으로 세션 쿠키�
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
+app.use('/post', postRouter);
 
 app.use((req, res, next) => {
     const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

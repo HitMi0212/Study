@@ -20,7 +20,7 @@ class Post extends Sequelize.Model {
             tableName: 'posts',
             charset: 'utf8mb4',
             collate: 'utf8mb4_general_ci',
-        })
+        });
     }
 
     static associate(db) {
