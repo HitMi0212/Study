@@ -10,7 +10,21 @@ module.exports = () => {
   // 세션  {세션쿠키: 유저아이디} -> 메모리 저장
 
   passport.deserializeUser((id, done) => {
-    User.findOne({ where: { id } })
+    User.findOne({ 
+        where: { id },
+        include: [
+            {
+                model: User,
+                attributes: ['id', 'nick'],
+                as: 'Followers',
+            }, // 팔로잉
+            {
+                model: User,
+                attributes: ['id', 'nick'],
+                as: 'Followings',
+            }, // 팔로워
+        ]
+    })
       .then(user => done(null, user))
       .catch(err => done(err));
   });
