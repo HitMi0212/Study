@@ -30,3 +30,31 @@ exports.renderMain = async (req, res, next) => {
 
 // 라우터 -> 컨트롤러 -> 서비스(요청, 응답 모름)
 
+
+exports.renderHashtag = async (req, res, next) => {
+    const query = req.query.hashtag;
+    if(!query){
+        return res.redirect('/');
+    }
+
+    try {
+        const hashtag = await Hashtag.findOne({ where: { title: query }} );
+        let posts = [];
+        if(hashtag) {
+            posts = await hashtag.getPosts({
+                include: [{
+                    model: User,
+                    attributes: ['id', 'nick']
+                }],
+                order: [['createdAt', 'DESC']]
+            });
+        }
+        return res.render('main', {
+            title: `${query} | NodeBird`,
+            twits: posts,
+        });
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+}
