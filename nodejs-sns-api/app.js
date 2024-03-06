@@ -11,7 +11,7 @@ const {sequelize} = require('./models');
 dotenv.config();    // process.env
 const authRouter = require('./routes/auth');
 const indexRouter = require('./routes');
-const v1Router = require('./v1');
+const v1Router = require('./routes/v1');
 const passportConfig = require('./passport');
 
 const app = express();
