@@ -1,5 +1,5 @@
 const express = require('express');
-const { test } = require('../controllers');
+// const { test } = require('../controllers');
 const { getMyPosts, searchByHashtag } = require('../controllers');
 
 const router = express.Router();

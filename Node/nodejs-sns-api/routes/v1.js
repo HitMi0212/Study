@@ -1,8 +1,10 @@
 const express = require('express');
-const { verifyToken } = require('../middlewares');
+const { verifyToken, deprecated } = require('../middlewares');
 const { createToken, tokenTest, getMyPosts, getPostsByHashtag } = require('../controllers/v1');
 
 const router = express.Router();
+
+router.use(deprecated);
 
 // /v1/token
 router.post('/token', createToken); // req.body.clientSecret

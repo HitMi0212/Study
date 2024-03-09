@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
+const User = require('../models/user');
 
 exports.isLoggedIn = (req, res, next) => {
     if(req.isAuthenticated()) { // passport 통해서 로그인
@@ -34,3 +36,27 @@ exports.verifyToken = (req, res, next) => {
         });
     }
 }
+
+exports.apiLimiter = async (req, res, next) =>  {
+    let user;
+    if(res.local.decoded) {
+        user = await User.findOne({ where: { id: res.local.decoded.id }});
+    }
+
+    rateLimit({
+        windowMs: 60 * 1000, // 1분
+        max: user?.type === 'premium' ? 1000 : 10,
+        handler(req, res) {
+            res.status(this.statusCode).json({
+            code: this.statusCode, // 기본값 429
+            message: '1분에 열 번만 요청할 수 있습니다.',
+            });
+        },
+    })(req, res, next);
+}
+exports.deprecated = (req, res) => {
+    res.status(410).json({
+      code: 410,
+      message: '새로운 버전이 나왔습니다. 새로운 버전을 사용하세요.',
+    });
+};
