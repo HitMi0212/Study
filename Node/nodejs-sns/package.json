@@ -2,9 +2,9 @@
   "name": "nodejs-sns",
   "version": "0.0.1",
   "description": "익스프레스로 만드는 SNS서비스",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon server.js",
     "test": "jest",
     "coverage": "jest --coverage"
   },
